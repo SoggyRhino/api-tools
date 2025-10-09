@@ -138,10 +138,15 @@ func updateTestData() error {
 	}
 	defer os.RemoveAll(tempResultDir)
 
+	files, err := utils.GetAllFilesWithExtension("testdata", ".html")
+	if err != nil {
+		return fmt.Errorf("failed to get all HTML files: %v", err)
+	}
+
 	//Fill temp dir with all the test cases and expected values
 	duplicates := make(map[string]bool)
 
-	for i, input := range utils.GetAllFilesWithExtension("testdata", ".html") {
+	for i, input := range files {
 		parse(input)
 
 		for _, course := range Courses {
@@ -251,7 +256,12 @@ func createSampleInput() (string, error) {
 		log.Fatalf("Failed to create profiles directory in temp intput dir: %v", err)
 	}
 
-	for i, input := range utils.GetAllFilesWithExtension("testdata", ".html") {
+	files, err := utils.GetAllFilesWithExtension("testdata", ".html")
+	if err != nil {
+		return "", fmt.Errorf("failed to get all HTML files: %v", err)
+	}
+
+	for i, input := range files {
 		data, err := os.ReadFile(input)
 		if err != nil {
 			return "", fmt.Errorf("failed to load test data: %v", err)

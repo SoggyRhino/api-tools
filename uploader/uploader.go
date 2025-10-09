@@ -29,7 +29,7 @@ import (
 //  Also note that this uploader assumes that the collection names match the names of these files, which they should.
 //  If the names of these collections ever change, the file names should be updated accordingly.
 
-var filesToUpload [3]string = [3]string{"courses.json", "professors.json", "sections.json"}
+var filesToUpload = [3]string{"courses.json", "professors.json", "sections.json"}
 
 func Upload(inDir string, replace bool, staticOnly bool) {
 	//Connect to mongo
@@ -71,7 +71,7 @@ func Upload(inDir string, replace bool, staticOnly bool) {
 	log.Print("Done building static aggregations!")
 }
 
-// Generic upload function to upload parsed JSON data to the Mongo database
+// UploadData Generic upload function to upload parsed JSON data to the Mongo database
 // Make sure that the name of the file being parsed matches with the name of the collection you are uploading to!
 // For example, your file should be named courses.json if you want to upload courses
 // As of right now, courses, professors, and sections are available to upload.

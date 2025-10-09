@@ -18,7 +18,7 @@ import (
 //  Note that this uploader assumes that the collection names match the names of these files, which they should.
 //  If the names of these collections ever change, the file names should be updated accordingly.
 
-var mapFilesToUpload [1]string = [1]string{"mapLocations.json"}
+var mapFilesToUpload = [1]string{"mapLocations.json"}
 
 func UploadMapLocations(inDir string) {
 

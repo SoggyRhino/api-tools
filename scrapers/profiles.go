@@ -308,13 +308,13 @@ func ScrapeProfiles(outDir string) {
 
 	// Write professor data to output file
 	fptr, err := os.Create(fmt.Sprintf("%s/profiles.json", outDir))
+	defer fptr.Close()
 	if err != nil {
 		panic(err)
 	}
 	encoder := json.NewEncoder(fptr)
 	encoder.SetIndent("", "\t")
 	encoder.Encode(professors)
-	fptr.Close()
 }
 
 func getOuterHtml(chromedpCtx context.Context, url string) (string, error) {

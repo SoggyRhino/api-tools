@@ -18,7 +18,7 @@ import (
 //  Note that this uploader assumes that the collection names match the names of these files, which they should.
 //  If the names of these collections ever change, the file names should be updated accordingly.
 
-var eventsFilesToUpload [2]string = [2]string{"astra.json", "mazevo.json"}
+var eventsFilesToUpload = [2]string{"astra.json", "mazevo.json"}
 
 func UploadEvents(inDir string) {
 

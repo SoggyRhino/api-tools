@@ -231,7 +231,7 @@ func WriteJSON(filepath string, data interface{}) error {
 }
 
 // Recursively gets the filepath of every file with the given extension, using the given directory as the root.
-func GetAllFilesWithExtension(inDir string, extension string) []string {
+func GetAllFilesWithExtension(inDir string, extension string) ([]string, error) {
 	var filePaths []string
 	err := filepath.WalkDir(inDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -244,9 +244,9 @@ func GetAllFilesWithExtension(inDir string, extension string) []string {
 		return nil
 	})
 	if err != nil {
-		panic(err)
+		return []string{}, fmt.Errorf("failed to walk directory %s: %s", inDir, err)
 	}
-	return filePaths
+	return filePaths, nil
 }
 
 // Removes standard whitespace characters (space, tab, newline, carriage return) from a given string.
@@ -298,7 +298,7 @@ func GetCoursePrefixes(chromedpCtx context.Context) []string {
 	log.Println("Finding course prefixes...")
 
 	// Get option elements for course prefix dropdown
-	_, err := chromedp.RunResponse(chromedpCtx,
+	err := chromedp.Run(chromedpCtx,
 		chromedp.Navigate("https://coursebook.utdallas.edu"),
 		chromedp.QueryAfter("select#combobox_cp option",
 			func(ctx context.Context, _ runtime.ExecutionContextID, nodes ...*cdp.Node) error {
@@ -310,7 +310,7 @@ func GetCoursePrefixes(chromedpCtx context.Context) []string {
 		),
 	)
 	if err != nil {
-		log.Panic(err)
+		log.Fatalf("Failed to find course prefixes: %v", err)
 	}
 	log.Printf("Found the %d course prefixes!", len(coursePrefixes))
 	return coursePrefixes

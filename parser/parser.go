@@ -58,15 +58,19 @@ func Parse(inDir string, outDir string, csvPath string, skipValidation bool) {
 	loadProfiles(filepath.Join(inDir, "profiles"))
 
 	// Find paths of all scraped data
-	paths := utils.GetAllFilesWithExtension(filepath.Join(inDir, "coursebook"), ".html")
+	files, err := utils.GetAllFilesWithExtension(filepath.Join(inDir, "coursebook"), ".html")
+	if err != nil {
+		log.Fatalf("failed to get all HTML files: %v", err)
+	}
+
 	if !skipValidation {
-		log.Printf("Parsing and validating %d files...", len(paths))
+		log.Printf("Parsing and validating %d files...", len(files))
 	} else {
-		log.Printf("Parsing %d files WITHOUT VALIDATION...", len(paths))
+		log.Printf("Parsing %d files WITHOUT VALIDATION...", len(files))
 	}
 
 	// Parse all data
-	for _, path := range paths {
+	for _, path := range files {
 		parse(path)
 	}
 
@@ -89,9 +93,8 @@ func Parse(inDir string, outDir string, csvPath string, skipValidation bool) {
 	}
 
 	// Make outDir if it doesn't already exist
-	err := os.MkdirAll(outDir, 0777)
-	if err != nil {
-		panic(err)
+	if err = os.MkdirAll(outDir, 0777); err != nil {
+		log.Fatalf("Failed to create output directory %s: %v", outDir, err)
 	}
 
 	// Write validated data to output files
@@ -104,7 +107,6 @@ func Parse(inDir string, outDir string, csvPath string, skipValidation bool) {
 // It opens the file, creates a goquery document, and calls parseSection to
 // extract section data.
 func parse(path string) {
-
 	utils.VPrintf("Parsing %s...", path)
 
 	// Open data file for reading

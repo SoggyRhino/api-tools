@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/UTDNebula/api-tools/parser"
@@ -73,15 +73,10 @@ func main() {
 	}
 
 	// Make new log file for this session using timestamp
-	dateTime := time.Now()
-	year, month, day := dateTime.Date()
-	hour, min, sec := dateTime.Clock()
-	logFile, err := os.Create(fmt.Sprintf("./logs/%d-%d-%dT%d-%d-%d.log", month, day, year, hour, min, sec))
-
+	logFile, err := os.Create(filepath.Join(*logDir, time.Now().Format("01-02-2006-02-hh-04-05.log")))
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	defer logFile.Close()
 	// Set logging output destination to a SplitWriter that writes to both the log file and stdout
 	log.SetOutput(utils.NewSplitWriter(logFile, os.Stdout))
@@ -101,7 +96,7 @@ func main() {
 			scrapers.ScrapeProfiles(*outDir)
 		case *scrapeCoursebook:
 			if *term == "" {
-				log.Panic("No term specified for coursebook scraping! Use -term to specify.")
+				log.Fatal("No term specified for coursebook scraping! Use -term to specify.")
 			}
 			scrapers.ScrapeCoursebook(*term, *startPrefix, *outDir, *resume)
 		case *scrapeOrganizations:
@@ -115,7 +110,7 @@ func main() {
 		case *mapFlag:
 			scrapers.ScrapeMapLocations(*outDir)
 		default:
-			log.Panic("You must specify which type of scraping you would like to perform with one of the scraping flags!")
+			log.Fatal("You must specify which type of scraping you would like to perform with one of the scraping flags!")
 		}
 	case *parse:
 		switch {

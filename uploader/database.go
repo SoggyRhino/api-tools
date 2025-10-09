@@ -9,7 +9,6 @@ import (
 	//"go.mongodb.org/mongo-driver/bson/primitive"
 	"context"
 	"log"
-	"os"
 	"time"
 
 	"github.com/UTDNebula/api-tools/utils"
@@ -26,15 +25,13 @@ func connectDB() *mongo.Client {
 
 	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
-		log.Panic("Unable to create MongoDB client and connect to database")
-		os.Exit(1)
+		log.Fatalf("Unable to create MongoDB client and connect to database: %v", err)
 	}
 
 	//ping the database
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Panic("Unable to ping database")
-		os.Exit(1)
+		log.Fatalf("Unable to ping database: %v", err)
 	}
 
 	log.Println("Connected to MongoDB")

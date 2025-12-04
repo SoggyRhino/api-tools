@@ -21,6 +21,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// TestData bundles a parser test input with its expected artifacts.
 type TestData struct {
 	Input      string
 	RowInfo    map[string]*goquery.Selection
@@ -33,14 +34,7 @@ type TestData struct {
 // testData global dictionary containing the data from /testdata by folder name
 var testData map[string]TestData
 
-// TestMain entry point for all tests in the parser package.
-// The function will load `./testdata` into memory before running
-// the tests so that test can run in parallel.
-//
-// You can optionally provide the flag `update`, which will run
-// updateTestData. Example usage
-//
-// `go test -v ./parser -args -update`
+// TestMain loads parser fixtures and handles the -update flag for regenerating expectations.
 func TestMain(m *testing.M) {
 	update := flag.Bool("update", false, "Regenerates the expected output for the provided test inputs. Should only be used when you are 100% sure your code is correct! It will make all test pass :)")
 
@@ -283,6 +277,7 @@ func clearGlobals() {
 	ReqParsers = make(map[primitive.ObjectID]func())
 }
 
+// TestParse verifies that parsing input fixtures generates the expected JSON exports.
 func TestParse(t *testing.T) {
 	tempDir := t.TempDir()
 
@@ -539,6 +534,7 @@ func unmarshallFile[T any](path string) (T, error) {
 	return result, nil
 }
 
+// TestGetClassInfo validates extraction of class metadata from course pages.
 func TestGetClassInfo(t *testing.T) {
 	t.Parallel()
 
@@ -562,6 +558,7 @@ func TestGetClassInfo(t *testing.T) {
 	}
 }
 
+// TestGetRowInfo confirms table rows are mapped to labels and content correctly.
 func TestGetRowInfo(t *testing.T) {
 	t.Parallel()
 	// don't include any weird characters in the content, it's not a bug with getRowInfo but

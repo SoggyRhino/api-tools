@@ -237,5 +237,7 @@ func ParseCometCalendar(inDir string, outDir string) {
 
 	log.Print("Parsed Comet Calendar!")
 
-	utils.WriteJSON(fmt.Sprintf("%s/cometCalendar.json", outDir), result)
+	if err := utils.WriteJSON(fmt.Sprintf("%s/cometCalendar.json", outDir), result); err != nil {
+		log.Fatalf("Failed to save cometCalendar.json: %v", err)
+	}
 }

@@ -150,8 +150,13 @@ func scrapeAndUnmarshal(client *http.Client, page int, data *APICalendarResponse
 	if err != nil {
 		return err
 	}
-	if res != nil && res.StatusCode != 200 {
-		return fmt.Errorf("ERROR: Non-200 status is returned, %s", res.Status)
+
+	if res == nil {
+		return fmt.Errorf("request failed with nil response")
+	}
+
+	if res.StatusCode != 200 {
+		return fmt.Errorf("request failed with status code: %s", res.Status)
 	}
 
 	// Unmarshal bytes to the response data
@@ -159,11 +164,10 @@ func scrapeAndUnmarshal(client *http.Client, page int, data *APICalendarResponse
 	if _, err = buffer.ReadFrom(res.Body); err != nil {
 		return err
 	}
-	res.Body.Close()
-	if err = json.Unmarshal(buffer.Bytes(), &data); err != nil {
+	if err := res.Body.Close(); err != nil {
 		return err
 	}
-	return nil
+	return json.Unmarshal(buffer.Bytes(), &data)
 }
 
 // toSlice attempts to convert data into a slice of interface{}.

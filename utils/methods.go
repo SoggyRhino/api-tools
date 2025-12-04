@@ -229,7 +229,7 @@ func WriteJSON(filepath string, data interface{}) error {
 }
 
 // GetAllFilesWithExtension recursively gathers file paths within inDir that match extension.
-func GetAllFilesWithExtension(inDir string, extension string) []string {
+func GetAllFilesWithExtension(inDir string, extension string) ([]string, error) {
 	var filePaths []string
 	err := filepath.WalkDir(inDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -241,10 +241,7 @@ func GetAllFilesWithExtension(inDir string, extension string) []string {
 		}
 		return nil
 	})
-	if err != nil {
-		panic(err)
-	}
-	return filePaths
+	return filePaths, err
 }
 
 // TrimWhitespace removes spaces, tabs, newlines, and carriage returns from the provided string.

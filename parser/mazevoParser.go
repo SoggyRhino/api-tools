@@ -104,5 +104,7 @@ func ParseMazevo(inDir string, outDir string) {
 
 	log.Print("Parsed Mazevo!")
 
-	utils.WriteJSON(fmt.Sprintf("%s/mazevo.json", outDir), result)
+	if err := utils.WriteJSON(fmt.Sprintf("%s/mazevo.json", outDir), result); err != nil {
+		log.Fatalf("Failed to save mazevo.json: %v", err)
+	}
 }

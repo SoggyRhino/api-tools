@@ -16,7 +16,9 @@ import (
 
 func main() {
 	// Load environment variables
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 
 	// Setup flags
 
@@ -71,11 +73,13 @@ func main() {
 
 	// Make log dir if it doesn't already exist
 	if _, err := os.Stat(*logDir); err != nil {
-		os.Mkdir(*logDir, os.ModePerm)
+		if err := os.Mkdir(*logDir, os.ModePerm); err != nil {
+			log.Fatalf("Failed to create log directory: %v", err)
+		}
 	}
 
 	// Make new log file for this session using timestamp
-	logFile, err := os.Create(filepath.Join(*logDir, time.Now().Format("01-02-2006-02-hh-04-05.log")))
+	logFile, err := os.Create(filepath.Join(*logDir, time.Now().Format("01-02-2006-02-15-04-05.log")))
 	if err != nil {
 		log.Fatal(err)
 	}

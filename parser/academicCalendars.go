@@ -145,7 +145,9 @@ func ParseAcademicCalendars(inDir string, outDir string) {
 	// Wait for workers to finish
 	wg.Wait()
 
-	utils.WriteJSON(fmt.Sprintf("%s/academicCalendars.json", outDir), result)
+	if err := utils.WriteJSON(fmt.Sprintf("%s/academicCalendars.json", outDir), result); err != nil {
+		log.Fatalf("Failed save academicCalendars.json: %v", err)
+	}
 }
 
 // Read a PDF, build a prompt for Gemini to parse it, check if it has already been asked in the cache, and ask Gemini if not

@@ -6,7 +6,6 @@ package uploader
 import (
 	"context"
 	"log"
-	"os"
 	"sync"
 	"time"
 
@@ -32,15 +31,13 @@ func connectDB() *mongo.Client {
 
 		client, err := mongo.Connect(ctx, opts)
 		if err != nil {
-			log.Panic("Unable to create MongoDB client and connect to database")
-			os.Exit(1)
+			log.Fatalf("Unable to create MongoDB client and connect to database")
 		}
 
 		// ping the database
 		err = client.Ping(ctx, nil)
 		if err != nil {
-			log.Panic("Unable to ping database")
-			os.Exit(1)
+			log.Fatalf("Unable to ping database")
 		}
 
 		log.Println("Connected to MongoDB")

@@ -61,5 +61,7 @@ func ParseMapLocations(inDir string, outDir string) {
 
 	log.Print("Parsed Map Locations!")
 
-	utils.WriteJSON(fmt.Sprintf("%s/mapLocations.json", outDir), filtered)
+	if err := utils.WriteJSON(fmt.Sprintf("%s/mapLocations.json", outDir), filtered); err != nil {
+		log.Fatalf("Failed to save mapLocations.json: %v", err)
+	}
 }

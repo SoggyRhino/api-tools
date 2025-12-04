@@ -99,9 +99,15 @@ func Parse(inDir string, outDir string, csvPath string, skipValidation bool) {
 	}
 
 	// Write validated data to output files
-	utils.WriteJSON(fmt.Sprintf("%s/courses.json", outDir), utils.GetMapValues(Courses))
-	utils.WriteJSON(fmt.Sprintf("%s/sections.json", outDir), utils.GetMapValues(Sections))
-	utils.WriteJSON(fmt.Sprintf("%s/professors.json", outDir), utils.GetMapValues(Professors))
+	if err := utils.WriteJSON(fmt.Sprintf("%s/courses.json", outDir), utils.GetMapValues(Courses)); err != nil {
+		log.Fatalf("Failed to save course.json: %v", err)
+	}
+	if err := utils.WriteJSON(fmt.Sprintf("%s/sections.json", outDir), utils.GetMapValues(Sections)); err != nil {
+		log.Fatalf("Failed to save sections.json: %v", err)
+	}
+	if err := utils.WriteJSON(fmt.Sprintf("%s/professors.json", outDir), utils.GetMapValues(Professors)); err != nil {
+		log.Fatalf("Failed to save professors.json: %v", err)
+	}
 }
 
 // parse is an internal helper function that parses a single HTML file.

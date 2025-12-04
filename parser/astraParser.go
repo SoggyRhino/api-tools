@@ -3,11 +3,11 @@ package parser
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/UTDNebula/api-tools/utils"
 	"log"
 	"os"
 	"strings"
 
-	"github.com/UTDNebula/api-tools/utils"
 	"github.com/UTDNebula/nebula-api/api/schema"
 )
 
@@ -78,7 +78,9 @@ func ParseAstra(inDir string, outDir string) {
 
 	log.Print("Parsed Astra!")
 
-	utils.WriteJSON(fmt.Sprintf("%s/astra.json", outDir), result)
+	if err := utils.WriteJSON(fmt.Sprintf("%s/astra.json", outDir), result); err != nil {
+		log.Fatalf("Failed to save astra.json: %v", err)
+	}
 }
 
 func mapFields(fields string) map[string]int {
